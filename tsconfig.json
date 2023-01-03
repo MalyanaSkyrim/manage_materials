@@ -21,7 +21,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "tailwind.config.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["./node_modules"]
 }

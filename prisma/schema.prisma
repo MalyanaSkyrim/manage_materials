@@ -21,6 +21,10 @@ model Sector {
 model Provider {
   id          Int       @id  @default(autoincrement())
   name String
+  email String
+  website String
+  phone String
+  address String
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   materials Material[]
@@ -31,8 +35,8 @@ model Material {
   name        String
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  sector      Sector         @relation(fields: [providerId], references: [id])
+  sector      Sector         @relation(fields: [sectorId], references: [id])
   sectorId    Int
-  provider    Provider       @relation(fields: [sectorId], references: [id])
+  provider    Provider       @relation(fields: [providerId], references: [id])
   providerId  Int
 }

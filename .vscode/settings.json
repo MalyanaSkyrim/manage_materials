@@ -1,7 +1,13 @@
 {
     "cSpell.words": [
         "Authed",
+        "clsx",
+        "lucide",
+        "nocompatible",
         "superjson",
+        "tailwindcss",
+        "tanstack",
         "trpc"
-    ]
+    ],
+    "editor.formatOnSave": true
 }

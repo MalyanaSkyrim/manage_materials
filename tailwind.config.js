@@ -1,0 +1,42 @@
+/** @type {import('tailwindcss').Config} */
+const { colors } = require('tailwindcss/colors')
+module.exports = {
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './ui/**/*.{js,ts,jsx,tsx}',
+  ],
+  darkMode: 'class',
+  theme: {
+    container: {
+      center: true,
+      padding: '1.5rem',
+    },
+    extend: {
+      colors: {
+        ...colors,
+        brand: {
+          50: '#f3f3f3',
+          100: '#e7e7e7',
+          200: '#c4c4c4',
+          300: '#a0a0a0',
+          400: '#585858',
+          500: '#111111',
+          600: '#0f0f0f',
+          700: '#0d0d0d',
+          800: '#0a0a0a',
+          900: '#080808',
+          DEFAULT: '#111111',
+        },
+      },
+    },
+  },
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/line-clamp'),
+    require('tailwind-scrollbar')({ nocompatible: true }),
+    require('tailwindcss-radix')(),
+    require('tailwindcss/plugin'),
+  ],
+}
