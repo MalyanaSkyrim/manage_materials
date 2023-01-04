@@ -2,10 +2,19 @@ import { Material } from '@prisma/client'
 import Head from 'next/head'
 import DashboardLayout from '../components/dashboard/dashboard-layout'
 import MaterialsList from '../components/materials/materials-list'
+import Select from '../ui/select'
 import { InfiniteItemsInputType } from '../utils/constants'
 import { trpc } from '../utils/trpc'
 
 export default function Materials() {
+  const { data: sectors } = trpc.resources.getSectorsList.useQuery(null, {
+    initialData: [],
+  })
+
+  const { data: providers } = trpc.resources.getProvidersList.useQuery(null, {
+    initialData: [],
+  })
+
   const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
     trpc.resources.infiniteMaterials.useInfiniteQuery(
       {
@@ -26,6 +35,10 @@ export default function Materials() {
       : [{ items: [], next: null }]
   const materials = pages.map((page) => page.items).flat()
 
+  const handleSectorChange = (value: string) => {
+    console.log(value)
+  }
+
   return (
     <div>
       <Head>
@@ -39,7 +52,31 @@ export default function Materials() {
           heading="Materials"
           text="Manage materials."
         />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col space-y-3">
+          <div className="flex space-x-2 relative z-50">
+            <Select
+              onValueChange={handleSectorChange}
+              defaultValue="placeholder"
+              items={[
+                { value: 'Select the sector', key: 'placeholder' },
+                ...sectors.map((sector) => ({
+                  value: sector.name,
+                  key: sector.id.toString(),
+                })),
+              ]}
+            />
+            <Select
+              onValueChange={handleSectorChange}
+              defaultValue="placeholder"
+              items={[
+                { value: 'Select the provider', key: 'placeholder' },
+                ...providers.map((provider) => ({
+                  value: provider.name,
+                  key: provider.id.toString(),
+                })),
+              ]}
+            />
+          </div>
           <MaterialsList
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
