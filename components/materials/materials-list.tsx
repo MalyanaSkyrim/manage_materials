@@ -41,7 +41,7 @@ const MaterialsList = ({
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
-      estimateItemSize={() => 218}
+      estimateItemSize={() => 235}
       columnsNumber={1}
     />
   )

@@ -1,12 +1,22 @@
 import { Material } from '@prisma/client'
 import Head from 'next/head'
+import { useState } from 'react'
 import DashboardLayout from '../components/dashboard/dashboard-layout'
-import MaterialsList from '../components/materials/materials-list'
+import {
+  AppMaterial,
+  MaterialItemSkeleton,
+} from '../components/materials/materials-item'
+import MaterialsList, {
+  MaterialsListSkeleton,
+} from '../components/materials/materials-list'
 import Select from '../ui/select'
 import { InfiniteItemsInputType } from '../utils/constants'
 import { trpc } from '../utils/trpc'
 
 export default function Materials() {
+  const [sectorId, setSectorId] = useState<number>()
+  const [providerId, setProviderId] = useState<number>()
+
   const { data: sectors } = trpc.resources.getSectorsList.useQuery(null, {
     initialData: [],
   })
@@ -20,11 +30,15 @@ export default function Materials() {
       {
         cursor: null,
         limit: 12,
+        filter: {
+          sectorId,
+          providerId,
+        },
       } as InfiniteItemsInputType,
       {
         getNextPageParam: (lastPage: {
           next: string | null
-          items: Material[]
+          items: AppMaterial[]
         }) => lastPage.next,
       },
     )
@@ -35,8 +49,13 @@ export default function Materials() {
       : [{ items: [], next: null }]
   const materials = pages.map((page) => page.items).flat()
 
-  const handleSectorChange = (value: string) => {
-    console.log(value)
+  const handleSectorChange = (key: string) => {
+    if (key === 'placeholder') setSectorId(undefined)
+    else setSectorId(Number(key))
+  }
+  const handleProviderChange = (key: string) => {
+    if (key === 'placeholder') setProviderId(undefined)
+    else setProviderId(Number(key))
   }
 
   return (
@@ -53,7 +72,7 @@ export default function Materials() {
           text="Manage materials."
         />
         <div className="flex-1 flex flex-col space-y-3">
-          <div className="flex space-x-2 relative z-50">
+          <div className="flex space-x-2 relative z-10">
             <Select
               onValueChange={handleSectorChange}
               defaultValue="placeholder"
@@ -66,7 +85,7 @@ export default function Materials() {
               ]}
             />
             <Select
-              onValueChange={handleSectorChange}
+              onValueChange={handleProviderChange}
               defaultValue="placeholder"
               items={[
                 { value: 'Select the provider', key: 'placeholder' },
@@ -77,12 +96,17 @@ export default function Materials() {
               ]}
             />
           </div>
-          <MaterialsList
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            materials={materials}
-            isFetchingNextPage={isFetchingNextPage}
-          />
+
+          {isLoading ? (
+            <MaterialsListSkeleton />
+          ) : (
+            <MaterialsList
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              materials={materials}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          )}
         </div>
       </DashboardLayout>
     </div>
